@@ -17,23 +17,30 @@ add_definitions(
 -Wold-style-cast
 -Wsign-promo
 -Wshadow
+-DBOOST_LOG_DYN_LINK
 )
 
 include(FindPkgConfig)
 
 find_package(SDL2 REQUIRED)
+find_package(Boost 1.60 REQUIRED log)
 
 add_executable(sketchthis
+	src/fps_counter.cpp
+	src/fps_counter.hpp
+	src/sdl_rm.hpp
 	src/sketchthis.cpp
 )
 
 target_include_directories(sketchthis
 PRIVATE
+	${Boost_INCLUDE_DIRS}
 	${SDL2_INCLUDE_DIRS}
 )
 
 target_link_libraries(sketchthis
 PRIVATE
+	${Boost_LIBRARIES}
 	${SDL2_LIBRARIES}
 )
 

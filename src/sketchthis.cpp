@@ -1,82 +1,63 @@
-#include <chrono>
 #include <cstdlib>
 #include <cstring>
-#include <functional>
-#include <iostream>
-#include <thread>
+#include <memory>
 
 #include <SDL.h>
 
-#include "at_scope_exit.hpp"
+#include "fps_counter.hpp"
+#include "sdl_rm.hpp"
 
-using namespace std::chrono_literals;
-using nonstd::at_scope_exit;
+using namespace sdl2_helpers;
+
+namespace {
+
+SDL_Rect
+get_widest_bounds()
+{
+    const auto display_num   = SDL_GetNumVideoDisplays();
+    auto       widest_bounds = SDL_Rect{};
+    for (auto display_no = 0; display_no != display_num; ++display_no) {
+        SDL_Rect display_bounds;
+        SDL_GetDisplayBounds(display_no, &display_bounds);
+        if (display_bounds.w > widest_bounds.w) {
+            widest_bounds = display_bounds;
+        }
+    }
+    return widest_bounds;
+}
+}
 
 int
 main()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        throw std::runtime_error(SDL_GetError());
-    }
-    auto sdl_cleanup = at_scope_exit<void()>([]() { SDL_Quit(); });
+    // initialize sdl2
+    sdl2_rm_t sdl2;
+    (void)sdl2;
 
-    SDL_DisplayMode display_mode;
-    int             request = SDL_GetDesktopDisplayMode(1, &display_mode);
-    if (request != 0) {
-        throw std::runtime_error(SDL_GetError());
-    }
-    const std::size_t buffer_length = {
-        static_cast<std::size_t>(display_mode.w * display_mode.h * 4)};
-    std::unique_ptr<std::uint8_t[]> data =
-        std::make_unique<std::uint8_t[]>(buffer_length);
-    const auto pitch = display_mode.w * 4;
+    // get the widest display (assume, user'd want to make a sketch on it)
+    const auto display_bounds = get_widest_bounds();
+
+    // make frame buffer
+    constexpr auto pixel_size    = 4; // rgb + alpha = 4 bytes
+    const auto     buffer_length = static_cast<std::size_t>(
+        display_bounds.w * display_bounds.h * pixel_size);
+    auto       data  = std::make_unique<std::uint8_t[]>(buffer_length);
+    const auto pitch = display_bounds.w * pixel_size;
     std::memset(data.get(), 0x00, buffer_length);
 
-    SDL_Rect display_bounds;
-    SDL_GetDisplayBounds(1, &display_bounds);
+    // create window
+    win_rm_t win_rm("sketchthis", display_bounds);
+    (void)win_rm;
 
-    auto window = SDL_CreateWindow(
-        "sketchthis",
-        display_bounds.x,
-        display_bounds.y,
-        display_bounds.w,
-        display_bounds.h,
-        SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN_DESKTOP |
-            SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_INPUT_GRABBED |
-            SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_SHOWN);
-    if (!window) {
-        throw std::runtime_error(SDL_GetError());
-    }
-    auto window_cleanup = at_scope_exit<void()>([&window]() {
-        if (window) {
-            SDL_DestroyWindow(window);
-        }
-    });
+    // create renderer
+    renderer_rm_t renderer_rm(win_rm.window);
+    (void)renderer_rm;
 
-    auto renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        throw std::runtime_error(SDL_GetError());
-    }
-    auto renderer_cleanup = at_scope_exit<void()>([&renderer]() {
-        if (renderer) {
-            SDL_DestroyRenderer(renderer);
-        }
-    });
+    // create texture
+    texture_rm_t texture_rm(renderer_rm.renderer, display_bounds);
+    (void)texture_rm;
 
-    auto target_texture = SDL_CreateTexture(
-        renderer,
-        SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING,
-        display_mode.w,
-        display_mode.h);
-    if (!target_texture) {
-        throw std::runtime_error(SDL_GetError());
-    }
-    auto texture_cleanup = at_scope_exit<void()>([&target_texture]() {
-        if (target_texture) {
-            SDL_DestroyTexture(target_texture);
-        }
-    });
+    misc::fps_counter_t fps_counter;
 
     auto      done = false;
     SDL_Event event;
@@ -88,17 +69,18 @@ main()
             case SDL_KEYDOWN: done = event.key.keysym.sym == SDLK_ESCAPE; break;
             case SDL_MOUSEMOTION:
                 std::memset(
-                    &data[pitch * event.motion.y + event.motion.x * 4],
+                    &data[pitch * event.motion.y + event.motion.x * pixel_size],
                     0xff,
-                    4);
+                    pixel_size);
                 break;
             default: break;
             }
         }
-        SDL_UpdateTexture(target_texture, nullptr, data.get(), pitch);
-        SDL_RenderCopy(renderer, target_texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer);
-        std::this_thread::sleep_for(50ms);
+        SDL_UpdateTexture(texture_rm.texture, nullptr, data.get(), pitch);
+        SDL_RenderCopy(
+            renderer_rm.renderer, texture_rm.texture, nullptr, nullptr);
+        SDL_RenderPresent(renderer_rm.renderer);
+        fps_counter.update();
     }
 
     return EXIT_SUCCESS;
