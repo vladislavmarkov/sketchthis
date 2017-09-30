@@ -4,63 +4,34 @@
 
 #include <SDL.h>
 
-#include "fps_counter.hpp"
-#include "sdl_rm.hpp"
-
-using namespace sdl2_helpers;
-
-namespace {
-
-SDL_Rect
-get_widest_bounds()
-{
-    const auto display_num   = SDL_GetNumVideoDisplays();
-    auto       widest_bounds = SDL_Rect{};
-    for (auto display_no = 0; display_no != display_num; ++display_no) {
-        SDL_Rect display_bounds;
-        SDL_GetDisplayBounds(display_no, &display_bounds);
-        if (display_bounds.w > widest_bounds.w) {
-            widest_bounds = display_bounds;
-        }
-    }
-    return widest_bounds;
-}
-}
+#include "fps_ctl.hpp"
+#include "sdl2_helpers.hpp"
 
 int
 main()
 {
-    // initialize sdl2
-    sdl2_rm_t sdl2;
-    (void)sdl2;
-
-    // get the widest display (assume, user'd want to make a sketch on it)
-    const auto display_bounds = get_widest_bounds();
-
-    // make frame buffer
-    constexpr auto pixel_size    = 4; // rgb + alpha = 4 bytes
-    const auto     buffer_length = static_cast<std::size_t>(
-        display_bounds.w * display_bounds.h * pixel_size);
-    auto       data  = std::make_unique<std::uint8_t[]>(buffer_length);
-    const auto pitch = display_bounds.w * pixel_size;
-    std::memset(data.get(), 0x00, buffer_length);
+    sdl2::init();
 
     // create window
-    win_rm_t win_rm("sketchthis", display_bounds);
-    (void)win_rm;
+    sdl2::window_t window("sketchthis");
+
+    // make frame buffer
+    constexpr std::size_t pixel_size = {4}; // rgb + alpha = 4 bytes
+    const auto            area       = window.get_width() * window.get_height();
+    const auto            buffer_length = area * pixel_size;
+    auto       data  = std::make_unique<std::uint8_t[]>(buffer_length);
+    const auto pitch = static_cast<int>(window.get_width() * pixel_size);
+    std::memset(data.get(), 0, buffer_length);
 
     // create renderer
-    renderer_rm_t renderer_rm(win_rm.window);
-    (void)renderer_rm;
+    sdl2::renderer_t renderer(window);
 
     // create texture
-    texture_rm_t texture_rm(renderer_rm.renderer, display_bounds);
-    (void)texture_rm;
+    sdl2::texture_t texture(renderer, window);
 
-    misc::fps_counter_t fps_counter;
-
-    auto      done = false;
-    SDL_Event event;
+    misc::fps_ctl_t fps_ctl;
+    auto            done = false;
+    SDL_Event       event;
 
     while (!done) {
         while (SDL_PollEvent(&event)) {
@@ -76,11 +47,10 @@ main()
             default: break;
             }
         }
-        SDL_UpdateTexture(texture_rm.texture, nullptr, data.get(), pitch);
-        SDL_RenderCopy(
-            renderer_rm.renderer, texture_rm.texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer_rm.renderer);
-        fps_counter.update();
+        SDL_UpdateTexture(texture, nullptr, data.get(), pitch);
+        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+        SDL_RenderPresent(renderer);
+        fps_ctl.update();
     }
 
     return EXIT_SUCCESS;

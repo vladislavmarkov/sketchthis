@@ -26,9 +26,9 @@ find_package(SDL2 REQUIRED)
 find_package(Boost 1.60 REQUIRED log)
 
 add_executable(sketchthis
-	src/fps_counter.cpp
-	src/fps_counter.hpp
-	src/sdl_rm.hpp
+	src/fps_ctl.cpp
+	src/fps_ctl.hpp
+	src/sdl2_helpers.hpp
 	src/sketchthis.cpp
 )
 
