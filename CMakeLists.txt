@@ -26,10 +26,24 @@ find_package(SDL2 REQUIRED)
 find_package(Boost 1.60 REQUIRED log)
 
 add_executable(sketchthis
+	src/application.cpp
+	src/application.hpp
 	src/fps_ctl.cpp
 	src/fps_ctl.hpp
-	src/sdl2_helpers.hpp
+	src/menu_reactor.cpp
+	src/menu_reactor.hpp
+	src/misc.cpp
+	src/misc.hpp
+	src/reactor.hpp
+	src/renderer.cpp
+	src/renderer.hpp
+	src/sdl2.cpp
+	src/sdl2.hpp
 	src/sketchthis.cpp
+	src/texture.cpp
+	src/texture.hpp
+	src/tlsm.hpp
+	src/tlsm_events.hpp
 )
 
 target_include_directories(sketchthis
