@@ -2,14 +2,11 @@
 
 #include "application.hpp"
 #include "fps_ctl.hpp"
-#include "sdl2.hpp"
 
 int
 main()
 {
-    sdl2::init();
-
-    // create window
+    // create application
     sketchthis::application_t app("sketchthis");
 
     // fps controller

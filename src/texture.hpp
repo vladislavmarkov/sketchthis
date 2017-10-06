@@ -3,13 +3,17 @@
 #define SDL2_TEXTURE_HPP
 
 #include <cstdint>
+#include <functional>
+#include <memory>
+#include <tuple>
 
-#include <SDL.h>
+struct SDL_Texture;
+struct SDL_Renderer;
 
 namespace sdl2 {
 
 class texture_t {
-    SDL_Texture* _texture = {nullptr};
+    std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> _texture;
 
 public:
     texture_t& operator=(const texture_t&) = delete;
@@ -18,9 +22,12 @@ public:
     texture_t(texture_t&&)            = delete;
 
     texture_t(SDL_Renderer* renderer, std::size_t width, std::size_t height);
+    texture_t(SDL_Texture* texture);
     ~texture_t();
 
-    operator SDL_Texture*() { return _texture; }
+    operator SDL_Texture*();
+
+    std::tuple<std::size_t, std::size_t> get_bounds() const;
 };
 }
 

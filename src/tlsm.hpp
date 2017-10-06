@@ -9,9 +9,6 @@
 #include "menu_reactor.hpp"
 #include "tlsm_events.hpp"
 
-// temp
-#include <boost/log/trivial.hpp>
-
 namespace sm {
 
 // acronym for top-level state machine
@@ -23,7 +20,6 @@ struct _tlsm_t : boost::msm::front::state_machine_def<_tlsm_t> {
         void
         on_entry(const Event&, FSM& fsm)
         {
-            BOOST_LOG_TRIVIAL(debug) << "entering menu state";
             fsm.app->set_reactor(sketchthis::menu_reactor(fsm.app));
         }
 
@@ -31,7 +27,6 @@ struct _tlsm_t : boost::msm::front::state_machine_def<_tlsm_t> {
         void
         on_exit(const Event&, FSM&)
         {
-            BOOST_LOG_TRIVIAL(debug) << "leaving menu state";
         }
     };
 
@@ -40,14 +35,12 @@ struct _tlsm_t : boost::msm::front::state_machine_def<_tlsm_t> {
         void
         on_entry(const Event&, FSM&)
         {
-            BOOST_LOG_TRIVIAL(debug) << "entering canvas state";
         }
 
         template <typename Event, typename FSM>
         void
         on_exit(const Event&, FSM&)
         {
-            BOOST_LOG_TRIVIAL(debug) << "leaving canvas state";
         }
     };
 

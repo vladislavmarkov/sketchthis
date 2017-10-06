@@ -2,12 +2,16 @@
 #ifndef SDL2_RENDERER_HPP
 #define SDL2_RENDERER_HPP
 
-#include <SDL.h>
+#include <functional>
+#include <memory>
+
+struct SDL_Renderer;
+struct SDL_Window;
 
 namespace sdl2 {
 
 class renderer_t {
-    SDL_Renderer* _renderer = {nullptr};
+    std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> _renderer;
 
 public:
     renderer_t& operator=(const renderer_t&) = delete;
@@ -18,7 +22,7 @@ public:
     renderer_t(SDL_Window* window);
     ~renderer_t();
 
-    operator SDL_Renderer*() { return _renderer; }
+    operator SDL_Renderer*();
 };
 }
 

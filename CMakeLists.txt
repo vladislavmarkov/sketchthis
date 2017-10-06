@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
 project(sketchthis)
 
@@ -22,24 +22,29 @@ add_definitions(
 
 include(FindPkgConfig)
 
+find_package(Boost 1.60 REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(Boost 1.60 REQUIRED log)
+string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+pkg_check_modules(SDL2_TTF SDL2_ttf>=2.0)
 
 add_executable(sketchthis
 	src/application.cpp
 	src/application.hpp
+	src/font.cpp
+	src/font.hpp
 	src/fps_ctl.cpp
 	src/fps_ctl.hpp
 	src/menu_reactor.cpp
 	src/menu_reactor.hpp
-	src/misc.cpp
-	src/misc.hpp
+	src/reactor.cpp
 	src/reactor.hpp
 	src/renderer.cpp
 	src/renderer.hpp
 	src/sdl2.cpp
 	src/sdl2.hpp
 	src/sketchthis.cpp
+	src/surface.cpp
+	src/surface.hpp
 	src/texture.cpp
 	src/texture.hpp
 	src/tlsm.hpp
@@ -50,12 +55,14 @@ target_include_directories(sketchthis
 PRIVATE
 	${Boost_INCLUDE_DIRS}
 	${SDL2_INCLUDE_DIRS}
+	${SDL2_TTF_INCLUDE_DIRS}
 )
 
 target_link_libraries(sketchthis
 PRIVATE
 	${Boost_LIBRARIES}
 	${SDL2_LIBRARIES}
+	${SDL2_TTF_LIBRARIES}
 )
 
 add_custom_target(clangformat

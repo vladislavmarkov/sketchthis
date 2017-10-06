@@ -3,32 +3,44 @@
 #define SKETCHTHIS_REACTOR_HPP
 
 #include <functional>
+#include <memory>
 
 namespace sketchthis {
 
-struct reactor_t {
-    std::function<void(int)> on_keydown = {[](int) {}};
-    std::function<void(std::size_t x, std::size_t y)> on_mouse_move = {
-        [](std::size_t, std::size_t) {}};
-    std::function<void()> on_quit = {[]() {}};
+struct keydown_func_t;
+struct mouse_move_func_t;
+struct draw_frame_func_t;
+struct quit_func_t;
 
-    reactor_t& operator=(reactor_t&&) = default;
+class reactor_t {
+    using keydown_func_ptr    = std::unique_ptr<keydown_func_t>;
+    using mouse_move_func_ptr = std::unique_ptr<mouse_move_func_t>;
+    using draw_frame_func_ptr = std::unique_ptr<draw_frame_func_t>;
+    using quit_func_ptr       = std::unique_ptr<quit_func_t>;
+
+    keydown_func_ptr    _on_keydown;
+    mouse_move_func_ptr _on_mouse_move;
+    draw_frame_func_ptr _on_draw_frame;
+    quit_func_ptr       _on_quit;
+
+public:
+    reactor_t& operator=(reactor_t&&);
     reactor_t& operator=(const reactor_t&) = delete;
-    reactor_t()                            = default;
-    reactor_t(const reactor_t&)            = delete;
-    reactor_t(reactor_t&&)                 = default;
-    ~reactor_t()                           = default;
+    reactor_t();
+    reactor_t(const reactor_t&) = delete;
+    reactor_t(reactor_t&&);
+    ~reactor_t();
 
-    template <typename KeydownFunc, typename MouseMoveFunc, typename QuitFunc>
     reactor_t(
-        KeydownFunc&&   keydown_func,
-        MouseMoveFunc&& mousemove_func,
-        QuitFunc&&      quit_func)
-        : on_keydown(std::forward<KeydownFunc>(keydown_func)),
-          on_mouse_move(std::forward<MouseMoveFunc>(mousemove_func)),
-          on_quit(std::forward<QuitFunc>(quit_func))
-    {
-    }
+        keydown_func_ptr&&,
+        mouse_move_func_ptr&&,
+        draw_frame_func_ptr&&,
+        quit_func_ptr&&);
+
+    void on_keydown(int key);
+    void on_mouse_move(int x, int y);
+    void on_draw_frame();
+    void on_quit();
 };
 }
 

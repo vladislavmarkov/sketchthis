@@ -25,10 +25,8 @@ class texture_t;
 
 namespace sketchthis {
 
-constexpr std::size_t pixel_size = {4}; // rgb + alpha = 4 bytes
-
 class application_t {
-    SDL_Window* _window = {nullptr};
+    std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> _window;
     std::size_t _x = {0}, _y = {0}, _w = {0}, _h = {0};
     std::size_t _pitch   = {0};
     bool        _running = {true};
@@ -36,10 +34,8 @@ class application_t {
     std::unique_ptr<sdl2::renderer_t> _renderer;
     std::unique_ptr<sdl2::texture_t>  _texture;
     std::vector<std::uint8_t>         _data;
-
-    // top-level state machine
-    std::unique_ptr<sm::tlsm_t> _tlsm;
-    reactor_t                   _reactor;
+    std::unique_ptr<sm::tlsm_t>       _tlsm; // top-level state machine
+    reactor_t                         _reactor;
 
 public:
     application_t& operator=(const application_t&) = delete;
@@ -67,6 +63,30 @@ public:
     set_reactor(reactor_t&& reactor)
     {
         _reactor = std::move(reactor);
+    }
+
+    sdl2::renderer_t*
+    renderer()
+    {
+        return _renderer.get();
+    }
+
+    sdl2::texture_t*
+    texture()
+    {
+        return _texture.get();
+    }
+
+    std::size_t
+    pitch() const
+    {
+        return _pitch;
+    }
+
+    std::vector<std::uint8_t>&
+    data()
+    {
+        return _data;
     }
 };
 }
