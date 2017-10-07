@@ -4,6 +4,8 @@
 
 #include <SDL.h>
 
+#include "renderer.hpp"
+
 namespace sdl2 {
 
 namespace {
@@ -16,10 +18,10 @@ destroy_texture(SDL_Texture* ptr)
 }
 
 texture_t::texture_t(
-    SDL_Renderer* renderer, std::size_t width, std::size_t height)
+    renderer_t* renderer, std::size_t width, std::size_t height)
     : _texture(
           SDL_CreateTexture(
-              renderer,
+              *renderer,
               SDL_PIXELFORMAT_ARGB8888,
               SDL_TEXTUREACCESS_STREAMING,
               static_cast<int>(width),

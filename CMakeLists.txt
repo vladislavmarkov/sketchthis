@@ -5,7 +5,7 @@ project(sketchthis)
 file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
 
 add_definitions(
--std=gnu++14
+-std=gnu++1z
 -Wall
 -Werror
 -Wextra
@@ -17,7 +17,6 @@ add_definitions(
 -Wold-style-cast
 -Wsign-promo
 -Wshadow
--DBOOST_LOG_DYN_LINK
 )
 
 include(FindPkgConfig)
@@ -30,17 +29,22 @@ pkg_check_modules(SDL2_TTF SDL2_ttf>=2.0)
 add_executable(sketchthis
 	src/application.cpp
 	src/application.hpp
+	src/button.cpp
+	src/button.hpp
 	src/font.cpp
 	src/font.hpp
 	src/fps_ctl.cpp
 	src/fps_ctl.hpp
 	src/menu_reactor.cpp
 	src/menu_reactor.hpp
+	src/reactor.cpp
 	src/reactor.hpp
 	src/renderer.cpp
 	src/renderer.hpp
 	src/sdl2.cpp
 	src/sdl2.hpp
+	src/sdl2_ttf.cpp
+	src/sdl2_ttf.hpp
 	src/sketchthis.cpp
 	src/surface.cpp
 	src/surface.hpp
@@ -48,6 +52,8 @@ add_executable(sketchthis
 	src/texture.hpp
 	src/tlsm.hpp
 	src/tlsm_events.hpp
+	src/window.cpp
+	src/window.hpp
 )
 
 target_include_directories(sketchthis

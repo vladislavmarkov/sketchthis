@@ -8,9 +8,10 @@
 #include <tuple>
 
 struct SDL_Texture;
-struct SDL_Renderer;
 
 namespace sdl2 {
+
+class renderer_t;
 
 class texture_t {
     std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> _texture;
@@ -21,8 +22,8 @@ public:
     texture_t(const texture_t&)       = delete;
     texture_t(texture_t&&)            = delete;
 
-    texture_t(SDL_Renderer* renderer, std::size_t width, std::size_t height);
-    texture_t(SDL_Texture* texture);
+    texture_t(renderer_t*, std::size_t width, std::size_t height);
+    texture_t(SDL_Texture*);
     ~texture_t();
 
     operator SDL_Texture*();

@@ -1,8 +1,8 @@
 #pragma once
-#ifndef SKETCHTHIS_REACTOR_HPP
-#define SKETCHTHIS_REACTOR_HPP
+#ifndef SDL2_REACTOR_HPP
+#define SDL2_REACTOR_HPP
 
-namespace sketchthis {
+namespace sdl2 {
 
 class reactor_t {
 public:
@@ -18,6 +18,8 @@ public:
     virtual void on_mouse_move(int x, int y) = 0;
     virtual void on_quit() = 0;
 };
+
+void handle_events(reactor_t*);
 }
 
-#endif // SKETCHTHIS_REACTOR_HPP
+#endif // SDL2_REACTOR_HPP

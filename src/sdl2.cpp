@@ -1,11 +1,11 @@
 #include "sdl2.hpp"
 
-#include <cassert>
 #include <cstdlib>
 #include <stdexcept>
 
 #include <SDL.h>
-#include <SDL_ttf.h>
+
+#include "window.hpp"
 
 namespace sdl2 {
 
@@ -16,19 +16,6 @@ init()
         throw std::runtime_error(SDL_GetError());
     }
     std::atexit(SDL_Quit);
-
-    if (TTF_Init() < 0) {
-        throw std::runtime_error(TTF_GetError());
-    }
-    std::atexit(TTF_Quit);
-
-    const SDL_version* linked_version = TTF_Linked_Version();
-    SDL_version        compiled_version;
-    SDL_TTF_VERSION(&compiled_version);
-
-    assert(linked_version->major == compiled_version.major);
-    assert(linked_version->minor == compiled_version.minor);
-    assert(linked_version->patch == compiled_version.patch);
 }
 
 std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>
@@ -48,5 +35,11 @@ get_widest_bounds()
         static_cast<std::size_t>(widest_bounds.y),
         static_cast<std::size_t>(widest_bounds.w),
         static_cast<std::size_t>(widest_bounds.h));
+}
+
+void
+warp_mouse(window_t* window, std::size_t x, std::size_t y)
+{
+    SDL_WarpMouseInWindow(*window, static_cast<int>(x), static_cast<int>(y));
 }
 }

@@ -4,12 +4,15 @@
 
 #include <memory>
 
+namespace sdl2 {
+class reactor_t;
+}
+
 namespace sketchthis {
 
 class application_t;
-class reactor_t;
 
-std::unique_ptr<reactor_t> menu_reactor(application_t*);
+std::unique_ptr<sdl2::reactor_t> menu_reactor(application_t*);
 }
 
 #endif // SKETCHTHIS_MENUREACTOR_HPP

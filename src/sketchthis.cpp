@@ -1,23 +1,13 @@
-#include <cstdlib>
-
 #include "application.hpp"
-#include "fps_ctl.hpp"
+#include "sdl2.hpp"
+#include "sdl2_ttf.hpp"
 
 int
 main()
 {
-    // create application
-    sketchthis::application_t app("sketchthis");
+    sdl2::init();
+    sdl2::ttf::init();
 
-    // fps controller
-    misc::fps_ctl_t fps_ctl;
-
-    // application loop
-    while (app.is_running()) {
-        app.handle_events();
-        app.draw_frame();
-        fps_ctl.update();
-    }
-
-    return EXIT_SUCCESS;
+    // run application
+    return sketchthis::application_t("sketchthis").run();
 }

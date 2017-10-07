@@ -6,10 +6,10 @@
 #include <SDL_ttf.h>
 
 #include "application.hpp"
-#include "font.hpp"
 #include "reactor.hpp"
 #include "renderer.hpp"
 #include "sdl2.hpp"
+#include "sdl2_ttf.hpp"
 #include "surface.hpp"
 #include "texture.hpp"
 #include "tlsm.hpp"
@@ -18,7 +18,7 @@ namespace sketchthis {
 
 namespace {
 
-class menu_reactor_t : public reactor_t {
+class menu_reactor_t : public sdl2::reactor_t {
     application_t*                   _app  = {nullptr};
     sm::tlsm_t*                      _tlsm = {nullptr};
     std::unique_ptr<sdl2::texture_t> _texture;
@@ -37,17 +37,13 @@ public:
         sdl2::ttf::font_t dejavu(
             "/usr/share/fonts/truetype/dejavu/DejaVuSans-ExtraLight.ttf", 26);
 
-        auto tmp_surface = sdl2::surface_t(
-            TTF_RenderText_Blended(
-                dejavu,
-                "Here could be your main menu...",
-                {255, 255, 255, 255}));
+        _texture = sdl2::ttf::render(
+            _app->renderer(),
+            dejavu,
+            "Here could be your main menu...",
+            {255, 255, 255, 255});
 
-        _texture = std::make_unique<sdl2::texture_t>(
-            SDL_CreateTextureFromSurface(*_app->renderer(), tmp_surface));
-
-        std::size_t w, h;
-        std::tie(w, h) = _texture->get_bounds();
+        auto[w, h] = _texture->get_bounds();
         _dstrect.w = static_cast<int>(w);
         _dstrect.h = static_cast<int>(h);
         std::tie(std::ignore, std::ignore, w, h) = sdl2::get_widest_bounds();
@@ -103,7 +99,7 @@ public:
 };
 }
 
-std::unique_ptr<reactor_t>
+std::unique_ptr<sdl2::reactor_t>
 menu_reactor(application_t* app)
 {
     assert(app);

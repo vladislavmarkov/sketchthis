@@ -6,9 +6,10 @@
 #include <memory>
 
 struct SDL_Renderer;
-struct SDL_Window;
 
 namespace sdl2 {
+
+class window_t;
 
 class renderer_t {
     std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> _renderer;
@@ -19,7 +20,7 @@ public:
     renderer_t(const renderer_t&)       = delete;
     renderer_t(renderer_t&&)            = delete;
 
-    renderer_t(SDL_Window* window);
+    renderer_t(window_t* window);
     ~renderer_t();
 
     operator SDL_Renderer*();

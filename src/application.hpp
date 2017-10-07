@@ -8,8 +8,6 @@
 
 #include <boost/msm/back/state_machine.hpp>
 
-#include "reactor.hpp"
-
 namespace sm {
 
 struct _tlsm_t;
@@ -19,23 +17,24 @@ typedef boost::msm::back::state_machine<_tlsm_t> tlsm_t;
 struct SDL_Window;
 
 namespace sdl2 {
+class reactor_t;
 class renderer_t;
 class texture_t;
+class window_t;
 }
 
 namespace sketchthis {
 
 class application_t {
-    std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> _window;
-    std::size_t _x = {0}, _y = {0}, _w = {0}, _h = {0};
     std::size_t _pitch   = {0};
     bool        _running = {true};
 
+    std::unique_ptr<sdl2::window_t>   _window;
     std::unique_ptr<sdl2::renderer_t> _renderer;
     std::unique_ptr<sdl2::texture_t>  _texture;
     std::vector<std::uint8_t>         _data;
     std::unique_ptr<sm::tlsm_t>       _tlsm; // top-level state machine
-    std::unique_ptr<reactor_t>        _reactor;
+    std::unique_ptr<sdl2::reactor_t>  _reactor;
 
 public:
     application_t& operator=(const application_t&) = delete;
@@ -45,6 +44,8 @@ public:
 
     application_t(const std::string& title);
     ~application_t();
+
+    int run();
 
     bool
     is_running() const
@@ -56,14 +57,7 @@ public:
 
     sm::tlsm_t* tlsm();
 
-    void handle_events();
-    void draw_frame();
-
-    void
-    set_reactor(std::unique_ptr<reactor_t>&& reactor)
-    {
-        _reactor = std::move(reactor);
-    }
+    void set_reactor(std::unique_ptr<sdl2::reactor_t>&& reactor);
 
     sdl2::renderer_t*
     renderer()
