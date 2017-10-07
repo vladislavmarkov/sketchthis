@@ -35,7 +35,7 @@ class application_t {
     std::unique_ptr<sdl2::texture_t>  _texture;
     std::vector<std::uint8_t>         _data;
     std::unique_ptr<sm::tlsm_t>       _tlsm; // top-level state machine
-    reactor_t                         _reactor;
+    std::unique_ptr<reactor_t>        _reactor;
 
 public:
     application_t& operator=(const application_t&) = delete;
@@ -60,7 +60,7 @@ public:
     void draw_frame();
 
     void
-    set_reactor(reactor_t&& reactor)
+    set_reactor(std::unique_ptr<reactor_t>&& reactor)
     {
         _reactor = std::move(reactor);
     }

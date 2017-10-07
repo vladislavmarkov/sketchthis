@@ -2,13 +2,14 @@
 #ifndef SKETCHTHIS_MENUREACTOR_HPP
 #define SKETCHTHIS_MENUREACTOR_HPP
 
-#include "reactor.hpp"
+#include <memory>
 
 namespace sketchthis {
 
 class application_t;
+class reactor_t;
 
-reactor_t menu_reactor(application_t*);
+std::unique_ptr<reactor_t> menu_reactor(application_t*);
 }
 
 #endif // SKETCHTHIS_MENUREACTOR_HPP

@@ -1,14 +1,13 @@
 #include "menu_reactor.hpp"
 
 #include <cassert>
-#include <memory>
 
 #include <SDL.h>
 #include <SDL_ttf.h>
 
 #include "application.hpp"
 #include "font.hpp"
-#include "functors.hpp"
+#include "reactor.hpp"
 #include "renderer.hpp"
 #include "sdl2.hpp"
 #include "surface.hpp"
@@ -19,55 +18,33 @@ namespace sketchthis {
 
 namespace {
 
-class menu_keydown_func_t : public keydown_func_t {
-    application_t* _app  = {nullptr};
-    sm::tlsm_t*    _tlsm = {nullptr};
-
-public:
-    menu_keydown_func_t(application_t* app) : _app(app), _tlsm(_app->tlsm()) {}
-    void
-    operator()(int key) override
-    {
-        switch (key) {
-        case SDLK_ESCAPE: _app->quit(); break;
-        case SDLK_n: _tlsm->process_event(sm::new_canvas()); break;
-        case SDLK_d: _tlsm->process_event(sm::discard_canvas()); break;
-        default: break;
-        }
-    }
-};
-
-class menu_mouse_move_func_t : public mouse_move_func_t {
-    application_t* _app = {nullptr};
-
-public:
-    menu_mouse_move_func_t(application_t* app) : _app(app) {}
-    void
-    operator()(int, int) override
-    {
-        // do nothing
-    }
-};
-
-class menu_draw_frame_func_t : public draw_frame_func_t {
-    application_t*                   _app = {nullptr};
+class menu_reactor_t : public reactor_t {
+    application_t*                   _app  = {nullptr};
+    sm::tlsm_t*                      _tlsm = {nullptr};
     std::unique_ptr<sdl2::texture_t> _texture;
     SDL_Rect                         _dstrect = {0, 0, 0, 0};
 
 public:
-    menu_draw_frame_func_t(application_t* app) : _app(app)
-    {
-        sdl2::ttf::font_t dejavu(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-ExtraLight.ttf", 16);
+    menu_reactor_t& operator=(menu_reactor_t&&) = default;
+    menu_reactor_t& operator=(const menu_reactor_t&) = delete;
+    menu_reactor_t(const menu_reactor_t&)            = delete;
+    menu_reactor_t(menu_reactor_t&&)                 = default;
 
-        auto surface = sdl2::surface_t(
+    menu_reactor_t(application_t* app) : _app(app), _tlsm(_app->tlsm())
+    {
+        assert(_app && _tlsm);
+
+        sdl2::ttf::font_t dejavu(
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-ExtraLight.ttf", 26);
+
+        auto tmp_surface = sdl2::surface_t(
             TTF_RenderText_Blended(
                 dejavu,
                 "Here could be your main menu...",
                 {255, 255, 255, 255}));
 
         _texture = std::make_unique<sdl2::texture_t>(
-            SDL_CreateTextureFromSurface(*_app->renderer(), surface));
+            SDL_CreateTextureFromSurface(*_app->renderer(), tmp_surface));
 
         std::size_t w, h;
         std::tie(w, h) = _texture->get_bounds();
@@ -79,8 +56,9 @@ public:
     }
 
     void
-    operator()() override
+    on_draw_frame() override
     {
+        assert(_app);
         SDL_UpdateTexture(
             *_app->texture(),
             nullptr,
@@ -97,29 +75,38 @@ public:
             SDL_FLIP_NONE);
         SDL_RenderPresent(*_app->renderer());
     }
-};
 
-class menu_quit_func_t : public quit_func_t {
-    application_t* _app = {nullptr};
-
-public:
-    menu_quit_func_t(application_t* app) : _app(app) {}
     void
-    operator()() override
+    on_keydown(int key) override
+    {
+        assert(_app);
+        switch (key) {
+        case SDLK_ESCAPE: _app->quit(); break;
+        case SDLK_n: _tlsm->process_event(sm::new_canvas()); break;
+        case SDLK_d: _tlsm->process_event(sm::discard_canvas()); break;
+        default: break;
+        }
+    }
+
+    void
+    on_mouse_move(int, int) override
     {
         // do nothing
+    }
+
+    void
+    on_quit() override
+    {
+        assert(_app);
+        _app->quit();
     }
 };
 }
 
-reactor_t
+std::unique_ptr<reactor_t>
 menu_reactor(application_t* app)
 {
     assert(app);
-    return reactor_t(
-        std::make_unique<menu_keydown_func_t>(app),
-        std::make_unique<menu_mouse_move_func_t>(app),
-        std::make_unique<menu_draw_frame_func_t>(app),
-        std::make_unique<menu_quit_func_t>(app));
+    return std::make_unique<menu_reactor_t>(app);
 }
 }

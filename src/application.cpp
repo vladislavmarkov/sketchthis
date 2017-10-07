@@ -66,13 +66,14 @@ application_t::tlsm()
 void
 application_t::handle_events()
 {
+    assert(_reactor);
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-        case SDL_QUIT: _reactor.on_quit(); break;
-        case SDL_KEYDOWN: _reactor.on_keydown(event.key.keysym.sym); break;
+        case SDL_QUIT: _reactor->on_quit(); break;
+        case SDL_KEYDOWN: _reactor->on_keydown(event.key.keysym.sym); break;
         case SDL_MOUSEMOTION:
-            _reactor.on_mouse_move(event.motion.x, event.motion.y);
+            _reactor->on_mouse_move(event.motion.x, event.motion.y);
             break;
         default: break;
         }
@@ -82,6 +83,7 @@ application_t::handle_events()
 void
 application_t::draw_frame()
 {
-    _reactor.on_draw_frame();
+    assert(_reactor);
+    _reactor->on_draw_frame();
 }
 }

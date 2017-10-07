@@ -36,7 +36,6 @@ add_executable(sketchthis
 	src/fps_ctl.hpp
 	src/menu_reactor.cpp
 	src/menu_reactor.hpp
-	src/reactor.cpp
 	src/reactor.hpp
 	src/renderer.cpp
 	src/renderer.hpp
