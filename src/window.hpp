@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <string_view>
+#include <tuple>
 
 struct SDL_Window;
 
@@ -20,11 +22,9 @@ public:
     window_t(window_t&&)            = delete;
 
     window_t(
-        const std::string& title,
-        std::size_t        x,
-        std::size_t        y,
-        std::size_t        w,
-        std::size_t        h);
+        std::string_view title,
+        const std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>&
+            rect);
     ~window_t();
 
     operator SDL_Window*();

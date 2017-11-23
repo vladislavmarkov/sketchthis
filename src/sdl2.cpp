@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <stdexcept>
 
+#include <gsl/gsl>
+
 #include <SDL.h>
 
 #include "window.hpp"
@@ -15,7 +17,12 @@ init()
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         throw std::runtime_error(SDL_GetError());
     }
-    std::atexit(SDL_Quit);
+}
+
+void
+quit()
+{
+    SDL_Quit();
 }
 
 std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>
@@ -31,15 +38,20 @@ get_widest_bounds()
         }
     }
     return std::forward_as_tuple(
-        static_cast<std::size_t>(widest_bounds.x),
-        static_cast<std::size_t>(widest_bounds.y),
-        static_cast<std::size_t>(widest_bounds.w),
-        static_cast<std::size_t>(widest_bounds.h));
+        gsl::narrow<std::size_t>(widest_bounds.x),
+        gsl::narrow<std::size_t>(widest_bounds.y),
+        gsl::narrow<std::size_t>(widest_bounds.w),
+        gsl::narrow<std::size_t>(widest_bounds.h));
 }
 
 void
-warp_mouse(window_t* window, std::size_t x, std::size_t y)
+warp_mouse(
+    gsl::not_null<window_t*> window,
+    const std::tuple<std::size_t, std::size_t>& point)
 {
-    SDL_WarpMouseInWindow(*window, static_cast<int>(x), static_cast<int>(y));
+    SDL_WarpMouseInWindow(
+        *window,
+        gsl::narrow<int>(std::get<0>(point)),
+        gsl::narrow<int>(std::get<1>(point)));
 }
 }

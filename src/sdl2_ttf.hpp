@@ -6,6 +6,8 @@
 #include <memory>
 #include <string>
 
+#include <gsl/gsl>
+
 #include "font.hpp"
 #include "sdl2.hpp"
 
@@ -19,9 +21,10 @@ namespace ttf {
 class font_t;
 
 void init();
+void quit();
 
-std::unique_ptr<texture_t>
-render(renderer_t*, font_t&, const std::string& text, const color_t&);
+std::unique_ptr<texture_t> render(
+    gsl::not_null<renderer_t*>, font_t&, std::string_view text, const color_t&);
 }
 }
 

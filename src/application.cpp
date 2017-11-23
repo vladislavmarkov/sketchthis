@@ -1,7 +1,5 @@
 #include "application.hpp"
 
-#include <cstring>
-
 #include <SDL.h>
 
 #include "fps_ctl.hpp"
@@ -15,16 +13,17 @@
 
 namespace sketchthis {
 
-application_t::application_t(const std::string& title)
+application_t::application_t(std::string_view title)
 {
     auto[x, y, w, h] = sdl2::get_widest_bounds();
+
     _pitch    = w * sdl2::pixel_size;
     _data     = std::vector<std::uint8_t>(w * h * sdl2::pixel_size, 0);
-    _window   = std::make_unique<sdl2::window_t>(title, x, y, w, h);
+    _window   = std::make_unique<sdl2::window_t>(title, std::tuple{x, y, w, h});
     _renderer = std::make_unique<sdl2::renderer_t>(_window.get());
     _texture  = std::make_unique<sdl2::texture_t>(_renderer.get(), w, h);
 
-    sdl2::warp_mouse(_window.get(), w / 2, h / 2);
+    sdl2::warp_mouse(_window.get(), std::tuple{w / 2u, h / 2u});
 
     // create state machine
     _tlsm = std::make_unique<sm::tlsm_t>();

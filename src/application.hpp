@@ -3,7 +3,7 @@
 #define SKETCHTHIS_APPLICATION_HPP
 
 #include <memory>
-#include <string>
+#include <string_view>
 #include <vector>
 
 #include <boost/msm/back/state_machine.hpp>
@@ -11,7 +11,7 @@
 namespace sm {
 
 struct _tlsm_t;
-typedef boost::msm::back::state_machine<_tlsm_t> tlsm_t;
+using tlsm_t = typename boost::msm::back::state_machine<_tlsm_t>;
 }
 
 struct SDL_Window;
@@ -42,7 +42,7 @@ public:
     application_t(const application_t&)       = delete;
     application_t(application_t&&)            = delete;
 
-    application_t(const std::string& title);
+    application_t(std::string_view title);
     ~application_t();
 
     int run();

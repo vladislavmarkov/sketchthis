@@ -20,7 +20,6 @@ init()
     if (TTF_Init() < 0) {
         throw std::runtime_error(TTF_GetError());
     }
-    std::atexit(TTF_Quit);
 
     const SDL_version* linked_version = TTF_Linked_Version();
     SDL_version        compiled_version;
@@ -31,16 +30,22 @@ init()
     assert(linked_version->patch == compiled_version.patch);
 }
 
+void
+quit()
+{
+    TTF_Quit();
+}
+
 std::unique_ptr<texture_t>
 render(
-    renderer_t*        renderer,
-    font_t&            font,
-    const std::string& text,
-    const color_t&     color)
+    gsl::not_null<renderer_t*> renderer,
+    font_t&                    font,
+    std::string_view           text,
+    const color_t&             color)
 {
     assert(renderer && !text.empty());
     auto tmp_surface =
-        sdl2::surface_t(TTF_RenderText_Blended(font, text.c_str(), color));
+        sdl2::surface_t(TTF_RenderText_Blended(font, text.data(), color));
     return std::make_unique<sdl2::texture_t>(
         SDL_CreateTextureFromSurface(*renderer, tmp_surface));
 }
