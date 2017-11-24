@@ -2,6 +2,8 @@
 #ifndef SDL2_REACTOR_HPP
 #define SDL2_REACTOR_HPP
 
+#include <gsl/gsl>
+
 namespace sdl2 {
 
 class reactor_t {
@@ -19,7 +21,7 @@ public:
     virtual void on_quit() = 0;
 };
 
-void handle_events(reactor_t*);
+void handle_events(gsl::not_null<reactor_t*>);
 }
 
 #endif // SDL2_REACTOR_HPP

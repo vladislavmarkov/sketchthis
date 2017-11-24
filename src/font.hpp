@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <memory>
-#include <string>
+#include <string_view>
 
 struct _TTF_Font;
 typedef struct _TTF_Font TTF_Font;
@@ -17,7 +17,7 @@ class font_t {
     std::unique_ptr<TTF_Font, std::function<void(TTF_Font*)>> _font;
 
 public:
-    font_t(const std::string& file, std::size_t ptsize);
+    font_t(std::string_view file, std::size_t ptsize);
     ~font_t();
 
     operator TTF_Font*();

@@ -5,7 +5,7 @@
 namespace sdl2 {
 
 void
-handle_events(reactor_t* reactor)
+handle_events(gsl::not_null<reactor_t*> reactor)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {

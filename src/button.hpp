@@ -4,6 +4,10 @@
 
 #include <functional>
 #include <memory>
+#include <tuple>
+#include <type_traits>
+
+#include <gsl/gsl>
 
 namespace sdl2 {
 
@@ -16,16 +20,15 @@ class button_t {
 
 public:
     button_t(
-        renderer_t*,
-        std::size_t x,
-        std::size_t y,
-        std::size_t w,
-        std::size_t h);
+        gsl::not_null<renderer_t*>,
+        const std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>&
+            rect);
 
     template <typename FuncType>
     void
     set_on_click(FuncType&& click_func)
     {
+        static_assert(std::is_invocable_v<FuncType>);
         _func = std::forward<FuncType>(click_func);
     }
 
