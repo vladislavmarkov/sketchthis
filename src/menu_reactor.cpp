@@ -30,7 +30,8 @@ public:
     menu_reactor_t(const menu_reactor_t&)            = delete;
     menu_reactor_t(menu_reactor_t&&)                 = default;
 
-    menu_reactor_t(application_t* app) : _app(app), _tlsm(_app->tlsm())
+    menu_reactor_t(gsl::not_null<application_t*> app)
+        : _app(app), _tlsm(_app->tlsm())
     {
         assert(_app && _tlsm);
 
@@ -100,7 +101,7 @@ public:
 }
 
 std::unique_ptr<sdl2::reactor_t>
-menu_reactor(application_t* app)
+menu_reactor(gsl::not_null<application_t*> app)
 {
     assert(app);
     return std::make_unique<menu_reactor_t>(app);

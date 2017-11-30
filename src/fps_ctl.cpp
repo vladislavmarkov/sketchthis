@@ -21,6 +21,7 @@ fps_ctl_t::update()
         _frames           = 0;
         _last_update_time = now;
         _sleep_duration += (_current_fps > etalon_fps) ? 1ms : -1ms;
+        _sleep_duration = std::max(1ms, _sleep_duration);
     }
     std::this_thread::sleep_for(_sleep_duration);
 }
