@@ -7,6 +7,10 @@
 #include <memory>
 #include <tuple>
 
+#include <gsl/gsl>
+
+#include "sdl2.hpp"
+
 struct SDL_Texture;
 
 namespace sdl2 {
@@ -22,13 +26,13 @@ public:
     texture_t(const texture_t&)       = delete;
     texture_t(texture_t&&)            = delete;
 
-    texture_t(renderer_t*, std::size_t width, std::size_t height);
-    texture_t(SDL_Texture*);
+    texture_t(gsl::not_null<renderer_t*>, const area_t&);
+    texture_t(gsl::not_null<SDL_Texture*>);
     ~texture_t();
 
     operator SDL_Texture*();
 
-    std::tuple<std::size_t, std::size_t> get_bounds() const;
+    area_t get_area() const;
 };
 }
 

@@ -17,6 +17,11 @@ class font_t {
     std::unique_ptr<TTF_Font, std::function<void(TTF_Font*)>> _font;
 
 public:
+    font_t& operator=(const font_t&) = delete;
+    font_t& operator                 =(font_t&&);
+    font_t(const font_t&)            = delete;
+    font_t(font_t&&);
+
     font_t(std::string_view file, std::size_t ptsize);
     ~font_t();
 

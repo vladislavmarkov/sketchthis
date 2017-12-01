@@ -7,25 +7,32 @@
 
 #include <gsl/gsl>
 
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_rect.h>
 
 namespace sdl2 {
 
-using color_t = SDL_Color;
+struct area_t {
+    int w;
+    int h;
+};
+
+using color_t   = SDL_Color;
+using keycode_t = SDL_Keycode;
+using point_t   = SDL_Point;
+using rect_t    = SDL_Rect;
 
 class window_t;
 
-constexpr std::size_t pixel_size = {4}; // rgb + alpha = 4 bytes
+constexpr std::uint8_t pixel_size = {4}; // rgb + alpha = 4 bytes
 
 void init();
 void quit();
 
-std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>
-get_widest_bounds();
+rect_t get_widest_bounds();
 
-void warp_mouse(
-    gsl::not_null<window_t*>,
-    const std::tuple<std::size_t, std::size_t>& point);
+void warp_mouse(gsl::not_null<window_t*>, const point_t&);
 }
 
 #endif // SDL2_WRAPPER_HPP

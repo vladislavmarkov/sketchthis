@@ -22,7 +22,7 @@ handle_events(gsl::not_null<reactor_t*> reactor)
             break;
         case SDL_MOUSEMOTION:
             if (reactor) {
-                reactor->on_mouse_move(event.motion.x, event.motion.y);
+                reactor->on_mouse_move({event.motion.x, event.motion.y});
             }
             break;
         default: break;

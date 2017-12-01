@@ -3,8 +3,6 @@
 #include <cstdlib>
 #include <stdexcept>
 
-#include <gsl/gsl>
-
 #include <SDL.h>
 
 #include "window.hpp"
@@ -25,7 +23,7 @@ quit()
     SDL_Quit();
 }
 
-std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>
+rect_t
 get_widest_bounds()
 {
     const auto display_num   = SDL_GetNumVideoDisplays();
@@ -37,21 +35,12 @@ get_widest_bounds()
             widest_bounds = display_bounds;
         }
     }
-    return std::forward_as_tuple(
-        gsl::narrow<std::size_t>(widest_bounds.x),
-        gsl::narrow<std::size_t>(widest_bounds.y),
-        gsl::narrow<std::size_t>(widest_bounds.w),
-        gsl::narrow<std::size_t>(widest_bounds.h));
+    return widest_bounds;
 }
 
 void
-warp_mouse(
-    gsl::not_null<window_t*> window,
-    const std::tuple<std::size_t, std::size_t>& point)
+warp_mouse(gsl::not_null<window_t*> window, const point_t& point)
 {
-    SDL_WarpMouseInWindow(
-        *window,
-        gsl::narrow<int>(std::get<0>(point)),
-        gsl::narrow<int>(std::get<1>(point)));
+    SDL_WarpMouseInWindow(*window, point.x, point.y);
 }
 }

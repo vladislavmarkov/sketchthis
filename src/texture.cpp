@@ -17,15 +17,14 @@ destroy_texture(SDL_Texture* ptr)
 }
 }
 
-texture_t::texture_t(
-    renderer_t* renderer, std::size_t width, std::size_t height)
+texture_t::texture_t(gsl::not_null<renderer_t*> renderer, const area_t& area)
     : _texture(
           SDL_CreateTexture(
               *renderer,
               SDL_PIXELFORMAT_ARGB8888,
               SDL_TEXTUREACCESS_STREAMING,
-              static_cast<int>(width),
-              static_cast<int>(height)),
+              area.w,
+              area.h),
           destroy_texture)
 {
     if (!_texture) {
@@ -33,7 +32,8 @@ texture_t::texture_t(
     }
 }
 
-texture_t::texture_t(SDL_Texture* texture) : _texture(texture, destroy_texture)
+texture_t::texture_t(gsl::not_null<SDL_Texture*> texture)
+    : _texture(texture, destroy_texture)
 {
     if (!_texture) {
         throw std::invalid_argument("can't construct texture_t from nullptr");
@@ -43,8 +43,8 @@ texture_t::texture_t(SDL_Texture* texture) : _texture(texture, destroy_texture)
 texture_t::~texture_t() = default;
 
 texture_t::operator SDL_Texture*() { return _texture.get(); }
-std::tuple<std::size_t, std::size_t>
-texture_t::get_bounds() const
+area_t
+texture_t::get_area() const
 {
     int w, h;
     if (SDL_QueryTexture(
@@ -55,7 +55,6 @@ texture_t::get_bounds() const
             &h)) {
         throw std::runtime_error("failed to get texture bounds");
     }
-    return std::forward_as_tuple(
-        static_cast<std::size_t>(w), static_cast<std::size_t>(h));
+    return {w, h};
 }
 }

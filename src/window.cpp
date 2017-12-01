@@ -4,16 +4,14 @@
 
 namespace sdl2 {
 
-window_t::window_t(
-    std::string_view title,
-    const std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>& rect)
+window_t::window_t(std::string_view title, const rect_t& rect)
     : _window(
           SDL_CreateWindow(
               title.data(),
-              static_cast<int>(std::get<0>(rect)),
-              static_cast<int>(std::get<1>(rect)),
-              static_cast<int>(std::get<2>(rect)),
-              static_cast<int>(std::get<3>(rect)),
+              rect.x,
+              rect.y,
+              rect.w,
+              rect.h,
               SDL_WINDOW_BORDERLESS | SDL_WINDOW_FULLSCREEN_DESKTOP |
                   SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_INPUT_GRABBED |
                   SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_SHOWN),

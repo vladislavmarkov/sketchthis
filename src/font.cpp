@@ -11,6 +11,10 @@ namespace sdl2 {
 
 namespace ttf {
 
+font_t& font_t::operator=(font_t&&) = default;
+
+font_t::font_t(font_t&&) = default;
+
 font_t::font_t(std::string_view file, std::size_t ptsize)
     : _font(
           TTF_OpenFont(file.data(), gsl::narrow<int>(ptsize)),

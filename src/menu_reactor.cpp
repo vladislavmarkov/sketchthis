@@ -22,7 +22,7 @@ class menu_reactor_t : public sdl2::reactor_t {
     application_t*                   _app  = {nullptr};
     sm::tlsm_t*                      _tlsm = {nullptr};
     std::unique_ptr<sdl2::texture_t> _texture;
-    SDL_Rect                         _dstrect = {0, 0, 0, 0};
+    sdl2::rect_t                     _dstrect = {0, 0, 0, 0};
 
 public:
     menu_reactor_t& operator=(menu_reactor_t&&) = default;
@@ -44,12 +44,12 @@ public:
             "Here could be your main menu...",
             {255, 255, 255, 255});
 
-        auto[w, h] = _texture->get_bounds();
-        _dstrect.w = static_cast<int>(w);
-        _dstrect.h = static_cast<int>(h);
-        std::tie(std::ignore, std::ignore, w, h) = sdl2::get_widest_bounds();
-        _dstrect.x = static_cast<int>((w - _dstrect.w) / 2);
-        _dstrect.y = static_cast<int>((h - _dstrect.h) / 2);
+        const auto[w, h] = _texture->get_area();
+        _dstrect.w               = w;
+        _dstrect.h               = h;
+        const auto widest_bounds = sdl2::get_widest_bounds();
+        _dstrect.x               = (widest_bounds.w - _dstrect.w) / 2;
+        _dstrect.y               = (widest_bounds.h - _dstrect.h) / 2;
     }
 
     void
@@ -60,7 +60,7 @@ public:
             *_app->texture(),
             nullptr,
             _app->data().data(),
-            static_cast<int>(_app->pitch()));
+            gsl::narrow<int>(_app->pitch()));
         SDL_RenderCopy(*_app->renderer(), *_app->texture(), nullptr, nullptr);
         SDL_RenderCopyEx(
             *_app->renderer(),
@@ -74,7 +74,7 @@ public:
     }
 
     void
-    on_keydown(int key) override
+    on_keydown(sdl2::keycode_t key) override
     {
         assert(_app);
         switch (key) {
@@ -86,7 +86,7 @@ public:
     }
 
     void
-    on_mouse_move(int, int) override
+    on_mouse_move(const sdl2::point_t&) override
     {
         // do nothing
     }

@@ -8,6 +8,8 @@
 #include <string_view>
 #include <tuple>
 
+#include "sdl2.hpp"
+
 struct SDL_Window;
 
 namespace sdl2 {
@@ -21,10 +23,7 @@ public:
     window_t(const window_t&)       = delete;
     window_t(window_t&&)            = delete;
 
-    window_t(
-        std::string_view title,
-        const std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>&
-            rect);
+    window_t(std::string_view title, const rect_t& rect);
     ~window_t();
 
     operator SDL_Window*();

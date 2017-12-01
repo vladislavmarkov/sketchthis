@@ -9,6 +9,8 @@
 
 #include <gsl/gsl>
 
+#include "sdl2.hpp"
+
 namespace sdl2 {
 
 class renderer_t;
@@ -19,10 +21,7 @@ class button_t {
     std::unique_ptr<sdl2::texture_t> _texture;
 
 public:
-    button_t(
-        gsl::not_null<renderer_t*>,
-        const std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>&
-            rect);
+    button_t(gsl::not_null<renderer_t*>, const rect_t& rect);
 
     template <typename FuncType>
     void
