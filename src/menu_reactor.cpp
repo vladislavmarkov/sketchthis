@@ -35,8 +35,7 @@ public:
     {
         assert(_app && _tlsm);
 
-        sdl2::ttf::font_t dejavu(
-            "/usr/share/fonts/truetype/dejavu/DejaVuSans-ExtraLight.ttf", 26);
+        sdl2::ttf::font_t dejavu("DejaVuSans-ExtraLight", 26);
 
         _texture = sdl2::ttf::render(
             _app->renderer(),

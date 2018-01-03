@@ -9,9 +9,7 @@
 struct _TTF_Font;
 typedef struct _TTF_Font TTF_Font;
 
-namespace sdl2 {
-
-namespace ttf {
+namespace sdl2::ttf {
 
 class font_t {
     std::unique_ptr<TTF_Font, std::function<void(TTF_Font*)>> _font;
@@ -27,7 +25,6 @@ public:
 
     operator TTF_Font*();
 };
-}
 }
 
 #endif // SDL2_TTF_FONT_HPP

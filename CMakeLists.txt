@@ -98,6 +98,7 @@ PRIVATE
 
 target_link_libraries(sketchthis
 PRIVATE
+	stdc++fs
 	${Boost_LIBRARIES}
 	${SDL2_LIBRARIES}
 	${SDL2_TTF_LIBRARIES}
