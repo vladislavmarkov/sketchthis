@@ -1,8 +1,7 @@
-#pragma once
 #ifndef SM_TLSM_HPP
 #define SM_TLSM_HPP
 
-#include <boost/msm/back/state_machine.hpp>
+// #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 
 #include "application.hpp"
@@ -65,6 +64,6 @@ struct _tlsm_t : boost::msm::front::state_machine_def<_tlsm_t> {
         app = arg_app;
     }
 };
-}
+} // namespace sm
 
 #endif // SM_TLSM_HPP

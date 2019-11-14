@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SM_TLSM_EVENTS_HPP
 #define SM_TLSM_EVENTS_HPP
 
@@ -8,6 +7,6 @@ struct new_canvas {
 };
 struct discard_canvas {
 };
-}
+} // namespace sm
 
 #endif // SM_TLSM_EVENTS_HPP

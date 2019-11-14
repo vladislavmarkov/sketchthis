@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_TEXTURE_HPP
 #define SDL2_TEXTURE_HPP
 
@@ -34,6 +33,6 @@ public:
 
     area_t get_area() const;
 };
-}
+} // namespace sdl2
 
 #endif // SDL2_TEXTURE_HPP

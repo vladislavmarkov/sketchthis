@@ -10,4 +10,4 @@ button_t::button_t(gsl::not_null<renderer_t*> renderer, const rect_t& rect)
 }
 
 button_t::~button_t() = default;
-}
+} // namespace sdl2

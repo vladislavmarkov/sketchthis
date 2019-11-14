@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_RENDERER_HPP
 #define SDL2_RENDERER_HPP
 
@@ -25,6 +24,6 @@ public:
 
     operator SDL_Renderer*();
 };
-}
+} // namespace sdl2
 
 #endif // SDL2_RENDERER_HPP

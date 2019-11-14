@@ -1,6 +1,6 @@
 #include "texture.hpp"
 
-#include <stdexcept>
+#include <iostream>
 
 #include <SDL.h>
 
@@ -15,7 +15,7 @@ destroy_texture(SDL_Texture* ptr)
 {
     if (ptr) SDL_DestroyTexture(ptr);
 }
-}
+} // namespace
 
 texture_t::texture_t(gsl::not_null<renderer_t*> renderer, const area_t& area)
     : _texture(
@@ -23,26 +23,25 @@ texture_t::texture_t(gsl::not_null<renderer_t*> renderer, const area_t& area)
               *renderer,
               SDL_PIXELFORMAT_ARGB8888,
               SDL_TEXTUREACCESS_STREAMING,
-              area.w,
-              area.h),
+              area[0],
+              area[1]),
           destroy_texture)
 {
     if (!_texture) {
-        throw std::runtime_error(SDL_GetError());
+        std::cerr << SDL_GetError() << '\n';
+        std::terminate();
     }
 }
 
 texture_t::texture_t(gsl::not_null<SDL_Texture*> texture)
     : _texture(texture, destroy_texture)
 {
-    if (!_texture) {
-        throw std::invalid_argument("can't construct texture_t from nullptr");
-    }
 }
 
 texture_t::~texture_t() = default;
 
 texture_t::operator SDL_Texture*() { return _texture.get(); }
+
 area_t
 texture_t::get_area() const
 {
@@ -53,8 +52,8 @@ texture_t::get_area() const
             nullptr,
             &w,
             &h)) {
-        throw std::runtime_error("failed to get texture bounds");
+        std::cerr << "failed to get texture bounds\n";
     }
     return {w, h};
 }
-}
+} // namespace sdl2

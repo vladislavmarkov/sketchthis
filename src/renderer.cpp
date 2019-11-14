@@ -11,12 +11,10 @@ renderer_t::renderer_t(window_t* window)
           SDL_CreateRenderer(*window, -1, SDL_RENDERER_ACCELERATED),
           [](SDL_Renderer* ptr) { SDL_DestroyRenderer(ptr); })
 {
-    if (!_renderer) {
-        throw std::runtime_error("failed to create renderer");
-    }
+    if (!_renderer) { std::terminate(); }
 }
 
 renderer_t::~renderer_t() = default;
 
 renderer_t::operator SDL_Renderer*() { return _renderer.get(); }
-}
+} // namespace sdl2

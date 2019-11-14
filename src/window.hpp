@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_WINDOW_HPP
 #define SDL2_WINDOW_HPP
 
@@ -23,11 +22,11 @@ public:
     window_t(const window_t&)       = delete;
     window_t(window_t&&)            = delete;
 
-    window_t(std::string_view title, const rect_t& rect);
+    window_t(std::string_view, const area_t&);
     ~window_t();
 
     operator SDL_Window*();
 };
-}
+} // namespace sdl2
 
 #endif // SDL2_WINDOW_HPP

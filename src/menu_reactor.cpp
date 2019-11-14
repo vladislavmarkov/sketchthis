@@ -43,12 +43,11 @@ public:
             "Here could be your main menu...",
             {255, 255, 255, 255});
 
-        const auto[w, h] = _texture->get_area();
-        _dstrect.w               = w;
-        _dstrect.h               = h;
-        const auto widest_bounds = sdl2::get_widest_bounds();
-        _dstrect.x               = (widest_bounds.w - _dstrect.w) / 2;
-        _dstrect.y               = (widest_bounds.h - _dstrect.h) / 2;
+        const auto [w, h] = _texture->get_area();
+        _dstrect.w        = w;
+        _dstrect.h        = h;
+        _dstrect.x        = (app->_area[0] - _dstrect.w) / 2;
+        _dstrect.y        = (app->_area[1] - _dstrect.h) / 2;
     }
 
     void
@@ -97,7 +96,7 @@ public:
         _app->quit();
     }
 };
-}
+} // namespace
 
 std::unique_ptr<sdl2::reactor_t>
 menu_reactor(gsl::not_null<application_t*> app)
@@ -105,4 +104,4 @@ menu_reactor(gsl::not_null<application_t*> app)
     assert(app);
     return std::make_unique<menu_reactor_t>(app);
 }
-}
+} // namespace sketchthis

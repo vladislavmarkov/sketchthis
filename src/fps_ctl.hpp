@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SKETCHTHIS_FPS_CTL_HPP
 #define SKETCHTHIS_FPS_CTL_HPP
 
@@ -18,6 +17,6 @@ public:
     void        update();
     std::size_t get_fps() const;
 };
-}
+} // namespace sketchthis
 
 #endif // SKETCHTHIS_FPS_CTL_HPP

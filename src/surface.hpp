@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_SURFACE_HPP
 #define SDL2_SURFACE_HPP
 
@@ -23,6 +22,6 @@ public:
 
     operator SDL_Surface*();
 };
-}
+} // namespace sdl2
 
 #endif // SDL2_SURFACE_HPP

@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <cstdlib>
-#include <stdexcept>
+#include <iostream>
 
 #include <SDL_ttf.h>
 
@@ -18,7 +18,8 @@ void
 init()
 {
     if (TTF_Init() < 0) {
-        throw std::runtime_error(TTF_GetError());
+        std::cerr << TTF_GetError() << '\n';
+        std::terminate();
     }
 
     const SDL_version* linked_version = TTF_Linked_Version();
@@ -43,11 +44,11 @@ render(
     std::string_view           text,
     const color_t&             color)
 {
-    assert(renderer && !text.empty());
+    assert(!text.empty());
     auto tmp_surface =
         sdl2::surface_t(TTF_RenderText_Blended(font, text.data(), color));
     return std::make_unique<sdl2::texture_t>(
         SDL_CreateTextureFromSurface(*renderer, tmp_surface));
 }
-}
-}
+} // namespace ttf
+} // namespace sdl2

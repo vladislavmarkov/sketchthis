@@ -2,8 +2,8 @@
 
 #include <cstdint>
 #include <experimental/filesystem>
+#include <iostream>
 #include <regex>
-#include <stdexcept>
 
 #include <SDL_ttf.h>
 #include <boost/property_tree/ptree.hpp>
@@ -22,8 +22,8 @@ get_font_dirs()
 {
     constexpr char fonts_conf[] = "/etc/fonts/fonts.conf";
     if (!fs::exists(fonts_conf) || !fs::is_regular_file(fonts_conf)) {
-        throw std::runtime_error(
-            "Error: Failed to find fonts configuration file");
+        std::cerr << "Error: Failed to find fonts configuration file\n";
+        std::terminate();
     }
 
     std::vector<std::string> font_dirs;
@@ -56,15 +56,13 @@ find_font_file(std::string_view basefile)
             std::smatch match;
             const auto  str = p.path().string();
             std::regex_search(str, match, matching_pattern);
-            if (!match.empty()) {
-                return match[0];
-            }
+            if (!match.empty()) { return match[0]; }
         }
     }
 
     return {};
 }
-}
+} // namespace
 
 font_t& font_t::operator=(font_t&&) = default;
 
@@ -74,7 +72,8 @@ font_t::font_t(std::string_view basefile, std::size_t ptsize)
 {
     auto filename = find_font_file(basefile);
     if (!filename || filename->empty()) {
-        throw std::runtime_error("Error: Failed to find font file");
+        std::cerr << "Error: Failed to find font file\n";
+        std::terminate();
     }
 
     _font = decltype(_font)(
@@ -82,11 +81,12 @@ font_t::font_t(std::string_view basefile, std::size_t ptsize)
         [](TTF_Font* ptr) { TTF_CloseFont(ptr); });
 
     if (!_font) {
-        std::runtime_error("Error: Failed to create font object");
+        std::cerr << "Error: Failed to create font object\n";
+        std::terminate();
     }
 }
 
 font_t::~font_t() = default;
 
 font_t::operator TTF_Font*() { return _font.get(); }
-}
+} // namespace sdl2::ttf

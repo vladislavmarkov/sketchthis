@@ -31,4 +31,4 @@ fps_ctl_t::get_fps() const
 {
     return _current_fps;
 }
-}
+} // namespace sketchthis

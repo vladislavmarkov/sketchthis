@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_REACTOR_HPP
 #define SDL2_REACTOR_HPP
 
@@ -26,6 +25,6 @@ public:
 };
 
 void handle_events(gsl::not_null<reactor_t*>);
-}
+} // namespace sdl2
 
 #endif // SDL2_REACTOR_HPP

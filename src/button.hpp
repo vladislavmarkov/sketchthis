@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_BUTTON_HPP
 #define SDL2_BUTTON_HPP
 
@@ -33,6 +32,6 @@ public:
 
     ~button_t();
 };
-}
+} // namespace sdl2
 
 #endif // SDL2_BUTTON_HPP

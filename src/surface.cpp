@@ -1,6 +1,6 @@
 #include "surface.hpp"
 
-#include <stdexcept>
+#include <iostream>
 
 #include <SDL.h>
 
@@ -14,12 +14,10 @@ surface_t::surface_t(SDL_Surface* surface)
           if (ptr) SDL_FreeSurface(ptr);
       })
 {
-    if (!_surface) {
-        throw std::invalid_argument("can't construct surface_t from nullptr");
-    }
+    if (!_surface) { std::cerr << "can't construct surface_t from nullptr\n"; }
 }
 
 surface_t::~surface_t() = default;
 
 surface_t::operator SDL_Surface*() { return _surface.get(); }
-}
+} // namespace sdl2

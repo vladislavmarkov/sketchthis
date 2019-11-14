@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SKETCHTHIS_MENUREACTOR_HPP
 #define SKETCHTHIS_MENUREACTOR_HPP
 
@@ -15,6 +14,6 @@ namespace sketchthis {
 class application_t;
 
 std::unique_ptr<sdl2::reactor_t> menu_reactor(gsl::not_null<application_t*>);
-}
+} // namespace sketchthis
 
 #endif // SKETCHTHIS_MENUREACTOR_HPP

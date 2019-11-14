@@ -14,5 +14,5 @@ main()
     auto sdl2_ttf_quit = gsl::finally([]() { sdl2::ttf::quit(); });
 
     // run application
-    return sketchthis::application_t("sketchthis").run();
+    return sketchthis::application_t("sketchthis", {640, 480}).run();
 }

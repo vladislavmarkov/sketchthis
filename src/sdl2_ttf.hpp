@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_TTX_HPP
 #define SDL2_TTX_HPP
 
@@ -25,7 +24,7 @@ void quit();
 
 std::unique_ptr<texture_t> render(
     gsl::not_null<renderer_t*>, font_t&, std::string_view text, const color_t&);
-}
-}
+} // namespace ttf
+} // namespace sdl2
 
 #endif // SDL2_TTX_HPP

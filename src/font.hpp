@@ -1,4 +1,3 @@
-#pragma once
 #ifndef SDL2_TTF_FONT_HPP
 #define SDL2_TTF_FONT_HPP
 
@@ -25,6 +24,6 @@ public:
 
     operator TTF_Font*();
 };
-}
+} // namespace sdl2::ttf
 
 #endif // SDL2_TTF_FONT_HPP
