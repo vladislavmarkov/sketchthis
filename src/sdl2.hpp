@@ -27,6 +27,8 @@ constexpr uint8_t pixel_size = {4}; // rgb + alpha = 4 bytes
 void init();
 void quit();
 
+rect_t get_widest_bounds();
+
 void warp_mouse(gsl::not_null<window_t*>, const point_t&);
 } // namespace sdl2
 

@@ -22,7 +22,7 @@ public:
     window_t(const window_t&)       = delete;
     window_t(window_t&&)            = delete;
 
-    window_t(std::string_view, const area_t&);
+    window_t(std::string_view, const sdl2::rect_t&);
     ~window_t();
 
     operator SDL_Window*();

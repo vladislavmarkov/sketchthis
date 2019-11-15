@@ -6,14 +6,14 @@
 
 namespace sdl2 {
 
-window_t::window_t(std::string_view title, const area_t& area)
+window_t::window_t(std::string_view title, const rect_t& rect)
     : _window(
           SDL_CreateWindow(
               title.data(),
-              SDL_WINDOWPOS_UNDEFINED,
-              SDL_WINDOWPOS_UNDEFINED,
-              area[0],
-              area[1],
+              rect.x,
+              rect.y,
+              rect.w,
+              rect.h,
               SDL_WINDOW_BORDERLESS | SDL_WINDOW_OPENGL |
                   SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_INPUT_GRABBED |
                   SDL_WINDOW_MOUSE_FOCUS | SDL_WINDOW_SHOWN),

@@ -30,9 +30,6 @@ class application_t {
     std::size_t _pitch   = {0};
     bool        _running = {true};
 
-public:
-    const sdl2::area_t _area = {0, 0};
-
 private:
     std::unique_ptr<sdl2::window_t>   _window;
     std::unique_ptr<sdl2::renderer_t> _renderer;
@@ -47,7 +44,7 @@ public:
     application_t(const application_t&)       = delete;
     application_t(application_t&&)            = delete;
 
-    application_t(std::string_view, const sdl2::area_t&);
+    application_t(std::string_view);
     ~application_t();
 
     int run();

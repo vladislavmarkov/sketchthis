@@ -46,8 +46,9 @@ public:
         const auto [w, h] = _texture->get_area();
         _dstrect.w        = w;
         _dstrect.h        = h;
-        _dstrect.x        = (app->_area[0] - _dstrect.w) / 2;
-        _dstrect.y        = (app->_area[1] - _dstrect.h) / 2;
+        const auto widest_bounds = sdl2::get_widest_bounds();
+        _dstrect.x        = (widest_bounds.w - _dstrect.w) / 2;
+        _dstrect.y        = (widest_bounds.h - _dstrect.h) / 2;
     }
 
     void

@@ -14,16 +14,17 @@
 
 namespace sketchthis {
 
-application_t::application_t(std::string_view title, const sdl2::area_t& area)
-    : _area(area)
+application_t::application_t(std::string_view title)
 {
-    _pitch    = _area[0] * sdl2::pixel_size;
-    _data     = std::vector<uint8_t>(_area[0] * _area[1] * sdl2::pixel_size, 0);
-    _window   = std::make_unique<sdl2::window_t>(title, _area);
-    _renderer = std::make_unique<sdl2::renderer_t>(_window.get());
-    _texture  = std::make_unique<sdl2::texture_t>(_renderer.get(), _area);
+    const auto[x, y, w, h] = sdl2::get_widest_bounds();
 
-    sdl2::warp_mouse(_window.get(), sdl2::point_t{_area[0] / 2, _area[1] / 2});
+    _pitch    = w * sdl2::pixel_size;
+    _data     = std::vector<uint8_t>(w * h * sdl2::pixel_size, 0);
+    _window   = std::make_unique<sdl2::window_t>(title, sdl2::rect_t{x, y, w, h});
+    _renderer = std::make_unique<sdl2::renderer_t>(_window.get());
+    _texture  = std::make_unique<sdl2::texture_t>(_renderer.get(), sdl2::area_t{w, h});
+
+    sdl2::warp_mouse(_window.get(), sdl2::point_t{w / 2, h / 2});
 
     // create state machine
     _tlsm = std::make_unique<sm::tlsm_t>();
