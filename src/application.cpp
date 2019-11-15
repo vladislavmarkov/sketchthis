@@ -16,13 +16,14 @@ namespace sketchthis {
 
 application_t::application_t(std::string_view title)
 {
-    const auto[x, y, w, h] = sdl2::get_widest_bounds();
+    const auto [x, y, w, h] = sdl2::get_widest_bounds();
 
-    _pitch    = w * sdl2::pixel_size;
-    _data     = std::vector<uint8_t>(w * h * sdl2::pixel_size, 0);
-    _window   = std::make_unique<sdl2::window_t>(title, sdl2::rect_t{x, y, w, h});
+    _pitch  = w * sdl2::pixel_size;
+    _data   = std::vector<uint8_t>(w * h * sdl2::pixel_size, 0);
+    _window = std::make_unique<sdl2::window_t>(title, sdl2::rect_t{x, y, w, h});
     _renderer = std::make_unique<sdl2::renderer_t>(_window.get());
-    _texture  = std::make_unique<sdl2::texture_t>(_renderer.get(), sdl2::area_t{w, h});
+    _texture =
+        std::make_unique<sdl2::texture_t>(_renderer.get(), sdl2::area_t{w, h});
 
     sdl2::warp_mouse(_window.get(), sdl2::point_t{w / 2, h / 2});
 
