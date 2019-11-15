@@ -43,12 +43,12 @@ public:
             "Here could be your main menu...",
             {255, 255, 255, 255});
 
-        const auto [w, h]        = _texture->get_area();
-        _dstrect.w               = w;
-        _dstrect.h               = h;
-        const auto widest_bounds = sdl2::get_widest_bounds();
-        _dstrect.x               = (widest_bounds.w - _dstrect.w) / 2;
-        _dstrect.y               = (widest_bounds.h - _dstrect.h) / 2;
+        const auto [w, h] = _texture->get_area();
+        _dstrect.w        = w;
+        _dstrect.h        = h;
+        const auto wb     = sdl2::get_widest_bounds();
+        _dstrect.x        = (wb.w - _dstrect.w) / 2;
+        _dstrect.y        = (wb.h - _dstrect.h) / 2;
     }
 
     void

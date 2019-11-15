@@ -1,19 +1,18 @@
 #include "texture.hpp"
 
-#include <iostream>
-
 #include <SDL.h>
 
 #include "renderer.hpp"
+#include "term.hpp"
 
 namespace sdl2 {
 
 namespace {
 
 void
-destroy_texture(SDL_Texture* ptr)
+destroy_texture(gsl::not_null<SDL_Texture*> ptr)
 {
-    if (ptr) SDL_DestroyTexture(ptr);
+    SDL_DestroyTexture(ptr);
 }
 } // namespace
 
@@ -27,10 +26,7 @@ texture_t::texture_t(gsl::not_null<renderer_t*> renderer, const area_t& area)
               area[1]),
           destroy_texture)
 {
-    if (!_texture) {
-        std::cerr << SDL_GetError() << '\n';
-        std::terminate();
-    }
+    if (!_texture) TERM(SDL_GetError());
 }
 
 texture_t::texture_t(gsl::not_null<SDL_Texture*> texture)
@@ -47,13 +43,9 @@ texture_t::get_area() const
 {
     int w, h;
     if (SDL_QueryTexture(
-            const_cast<SDL_Texture*>(_texture.get()),
-            nullptr,
-            nullptr,
-            &w,
-            &h)) {
-        std::cerr << "failed to get texture bounds\n";
-    }
+            const_cast<SDL_Texture*>(_texture.get()), nullptr, nullptr, &w, &h))
+        TERM("failed to get texture bounds");
+
     return {w, h};
 }
 } // namespace sdl2

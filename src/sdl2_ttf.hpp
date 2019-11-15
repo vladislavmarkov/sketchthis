@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include <gsl/gsl>
+#include <gsl/pointers>
 
 #include "font.hpp"
 #include "sdl2.hpp"

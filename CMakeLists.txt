@@ -33,6 +33,7 @@ add_executable(sketchthis
     src/sketchthis.cpp
     src/surface.cpp
     src/surface.hpp
+    src/term.hpp
     src/texture.cpp
     src/texture.hpp
     src/tlsm.hpp

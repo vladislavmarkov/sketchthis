@@ -2,13 +2,14 @@
 
 #include <cstdint>
 #include <experimental/filesystem>
-#include <iostream>
 #include <regex>
 
 #include <SDL_ttf.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
-#include <gsl/gsl>
+#include <gsl/gsl_util>
+
+#include "term.hpp"
 
 namespace sdl2::ttf {
 
@@ -22,8 +23,7 @@ get_font_dirs()
 {
     constexpr char fonts_conf[] = "/etc/fonts/fonts.conf";
     if (!fs::exists(fonts_conf) || !fs::is_regular_file(fonts_conf)) {
-        std::cerr << "Error: Failed to find fonts configuration file\n";
-        std::terminate();
+        TERM("failed to find fonts configuration file");
     }
 
     std::vector<std::string> font_dirs;
@@ -71,19 +71,13 @@ font_t::font_t(font_t&&) = default;
 font_t::font_t(std::string_view basefile, std::size_t ptsize)
 {
     auto filename = find_font_file(basefile);
-    if (!filename || filename->empty()) {
-        std::cerr << "Error: Failed to find font file\n";
-        std::terminate();
-    }
+    if (!filename || filename->empty()) { TERM("failed to find font file"); }
 
     _font = decltype(_font)(
         TTF_OpenFont(filename->c_str(), gsl::narrow<int>(ptsize)),
         [](TTF_Font* ptr) { TTF_CloseFont(ptr); });
 
-    if (!_font) {
-        std::cerr << "Error: Failed to create font object\n";
-        std::terminate();
-    }
+    if (!_font) { TERM("failed to create font object"); }
 }
 
 font_t::~font_t() = default;

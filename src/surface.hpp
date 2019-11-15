@@ -2,6 +2,7 @@
 #define SDL2_SURFACE_HPP
 
 #include <functional>
+#include <gsl/pointers>
 #include <memory>
 
 struct SDL_Surface;
@@ -17,7 +18,7 @@ public:
     surface_t(const surface_t&)            = delete;
     surface_t(surface_t&&);
 
-    surface_t(SDL_Surface* surface);
+    surface_t(gsl::not_null<SDL_Surface*> surface);
     ~surface_t();
 
     operator SDL_Surface*();

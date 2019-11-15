@@ -2,6 +2,7 @@
 #define SDL2_RENDERER_HPP
 
 #include <functional>
+#include <gsl/pointers>
 #include <memory>
 
 struct SDL_Renderer;
@@ -19,7 +20,7 @@ public:
     renderer_t(const renderer_t&)       = delete;
     renderer_t(renderer_t&&)            = delete;
 
-    renderer_t(window_t* window);
+    renderer_t(gsl::not_null<window_t*> window);
     ~renderer_t();
 
     operator SDL_Renderer*();

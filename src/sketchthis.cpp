@@ -1,12 +1,8 @@
-#include <gsl/gsl>
+#include <gsl/gsl_util>
 
 #include "application.hpp"
 #include "sdl2.hpp"
 #include "sdl2_ttf.hpp"
-
-// debug
-#include <SDL.h>
-#include <iostream>
 
 int
 main()
@@ -16,8 +12,6 @@ main()
 
     sdl2::ttf::init();
     auto sdl2_ttf_quit = gsl::finally([]() { sdl2::ttf::quit(); });
-
-    std::cout << static_cast<uint16_t>(SDL_GetNumVideoDisplays()) << '\n';
 
     // run application
     return sketchthis::application_t("sketchthis").run();

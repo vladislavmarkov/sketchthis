@@ -2,12 +2,12 @@
 
 #include <cassert>
 #include <cstdlib>
-#include <iostream>
 
 #include <SDL_ttf.h>
 
 #include "renderer.hpp"
 #include "surface.hpp"
+#include "term.hpp"
 #include "texture.hpp"
 
 namespace sdl2 {
@@ -17,10 +17,7 @@ namespace ttf {
 void
 init()
 {
-    if (TTF_Init() < 0) {
-        std::cerr << TTF_GetError() << '\n';
-        std::terminate();
-    }
+    if (TTF_Init() < 0) TERM(TTF_GetError());
 
     const SDL_version* linked_version = TTF_Linked_Version();
     SDL_version        compiled_version;

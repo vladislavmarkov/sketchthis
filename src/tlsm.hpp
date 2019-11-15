@@ -1,7 +1,6 @@
 #ifndef SM_TLSM_HPP
 #define SM_TLSM_HPP
 
-// #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 
 #include "application.hpp"
@@ -59,7 +58,7 @@ struct _tlsm_t : boost::msm::front::state_machine_def<_tlsm_t> {
     }
 
     void
-    set_app_ptr(sketchthis::application_t* arg_app)
+    set_app_ptr(gsl::not_null<sketchthis::application_t*> arg_app)
     {
         app = arg_app;
     }
